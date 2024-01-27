@@ -4,7 +4,7 @@ namespace Mango.Services.CouponAPI.Models
 {
     public class Coupon
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string CouponCode { get; set; }

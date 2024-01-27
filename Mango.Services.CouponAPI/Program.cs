@@ -33,7 +33,7 @@ void ApplyMigration()
     {
         var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        if(_db.Database.GetPendingMigrations().Count() > 0)
+        if (_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();
         }
