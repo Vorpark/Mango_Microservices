@@ -22,7 +22,7 @@ namespace Mango.Web.Service
             {
                 HttpClient client = _httpClientFactory.CreateClient("MangoAPI");
                 HttpRequestMessage message = new();
-                message.Headers.Add("Accept", "/application/json");
+                message.Headers.Add("Accept", "application/json");
                 //token
 
 
@@ -36,9 +36,6 @@ namespace Mango.Web.Service
 
                 switch (requestDTO.ApiType)
                 {
-                    case ApiType.GET:
-                        message.Method = HttpMethod.Get;
-                        break;
                     case ApiType.POST:
                         message.Method = HttpMethod.Post;
                         break;
@@ -47,6 +44,9 @@ namespace Mango.Web.Service
                         break;
                     case ApiType.DELETE:
                         message.Method = HttpMethod.Delete;
+                        break;
+                    default:
+                        message.Method = HttpMethod.Get;
                         break;
                 }
 
