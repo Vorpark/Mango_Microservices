@@ -9,12 +9,12 @@ namespace Mango.Services.AuthAPI.Controllers
     public class AuthAPIController : ControllerBase
     {
         private readonly IAuthService _authService;
-        protected ResponseDTO _responseDTO;
+        protected ResponseDTO _response;
 
         public AuthAPIController(IAuthService authService)
         {
             _authService = authService;
-            _responseDTO = new();
+            _response = new();
         }
 
         [HttpPost("register")]
@@ -23,18 +23,26 @@ namespace Mango.Services.AuthAPI.Controllers
             var errorMessage = await _authService.Register(model);
             if (!string.IsNullOrEmpty(errorMessage))
             {
-                _responseDTO.IsSuccess = false;
-                _responseDTO.Message = errorMessage;
-                return BadRequest(_responseDTO);
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
             }
 
-            return Ok(_responseDTO);
+            return Ok(_response);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login()
+        public async Task<ActionResult> Login([FromBody] LoginRequestDTO model)
         {
-            return Ok();
+            var loginResponse = await _authService.Login(model);
+            if (loginResponse.User == null)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Username or password is incorrect";
+                return BadRequest(_response);
+            }
+            _response.Result = loginResponse;
+            return Ok(_response);
         }
     }
 }
