@@ -17,6 +17,20 @@ namespace Mango.Services.AuthAPI.Controllers
             _response = new();
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] LoginRequestDTO model)
+        {
+            var loginResponse = await _authService.Login(model);
+            if (loginResponse.User == null)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Username or password is incorrect";
+                return BadRequest(_response);
+            }
+            _response.Result = loginResponse;
+            return Ok(_response);
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegistrationRequestDTO model)
         {
@@ -30,17 +44,16 @@ namespace Mango.Services.AuthAPI.Controllers
             return Ok(_response);
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginRequestDTO model)
+        [HttpPost("assignrole")]
+        public async Task<ActionResult> AssignRole([FromBody] RegistrationRequestDTO model)
         {
-            var loginResponse = await _authService.Login(model);
-            if (loginResponse.User == null)
+            var assignRoleSuccess = await _authService.AssignRole(model.Email, model.Role.ToUpper());
+            if (!assignRoleSuccess)
             {
                 _response.IsSuccess = false;
-                _response.Message = "Username or password is incorrect";
+                _response.Message = "Error encountered";
                 return BadRequest(_response);
             }
-            _response.Result = loginResponse;
             return Ok(_response);
         }
     }
